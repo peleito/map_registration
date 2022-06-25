@@ -1,0 +1,31 @@
+# these filters get applied to the scans from the range sensor every time a scan is received
+# - SurfaceNormalDataPointsFilter:
+#     knn: 8
+#     epsilon: 0
+#     keepNormals: 1
+#     keepDensities: 1
+- DistanceLimitDataPointsFilter:
+    dim: -1 # -1 means radial distance, 0 is x, 1 is y, 2 is z
+    dist: 9
+    removeInside: 0
+- DistanceLimitDataPointsFilter:
+    dim: -1 # -1 means radial distance, 0 is x, 1 is y, 2 is z
+    dist: 0.25 
+    removeInside: 1
+- BoundingBoxDataPointsFilter:
+      xMin: 0
+      xMax: 2
+      yMin: -0.5
+      yMax: 0.5
+      zMin: -0.5
+      zMax: 0.5
+      removeInside: 0
+# - RandomSamplingDataPointsFilter:
+#     prob: 0.5
+# - FixStepSamplingDataPointsFilter:
+#     startStep: 10
+# - ObservationDirectionDataPointsFilter
+# - OrientNormalsDataPointsFilter
+# - ShadowDataPointsFilter
+# - MaxDensityDataPointsFilter:
+#     maxDensity: 200.0

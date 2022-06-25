@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <include file="$(find icp_localization)/launch/icp_node_l515_in_os.launch"/>
+    
+    <include file="$(find map_registration)/launch/map_stitching.launch"/>
+
+</launch>

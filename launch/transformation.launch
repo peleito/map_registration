@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <node pkg="tf" type="static_transform_publisher" name="kinect_base_link5" args="0.04 0 -0.075 1 0 0 0 /os_sensor /camera_link 100"/> 
+
+    <arg name="icp_config_name" default="icp_l515.yaml" />
+    <arg name="icp_config_path" default="$(find map_registration)/params/$(arg icp_config_name)" />
+
+    <arg name="input_filters_config_name_1" default="input_filters_l515.yaml" />
+    <arg name="input_filters_config_path_1" default="$(find map_registration)/params/$(arg input_filters_config_name_1)" />
+
+    <arg name="input_filters_config_name_2" default="input_filters_os.yaml" />
+    <arg name="input_filters_config_path_2" default="$(find map_registration)/params/$(arg input_filters_config_name_2)" />
+
+    <arg name="pcd_filename" default="step0.pcd" /> 
+    <arg name="pcd_filepath" default="$(find map_registration)/data/$(arg pcd_filename)" /> 
+
+    <arg name="map" default="/os_cloud_node/points" />
+    <!-- <arg name="scan" default="/os_cloud_node/points" /> -->
+    <arg name="scan" default="/cloud" />
+    <arg name="pose" default="/icp_node/range_sensor_pose" />
+
+    <!-- Launch icp node -->
+    <node name="sensor_transformation" pkg="map_registration" type="sensor_transformation" output="screen">
+        <param name="icp_config" value="$(arg icp_config_path)" />
+        <param name="input_config_l515" value="$(arg input_filters_config_path_1)" />
+        <param name="input_config_os" value="$(arg input_filters_config_path_2)" />
+
+        <param name="map_topic" value="$(arg map)" />
+        <param name="scan_topic" value="$(arg scan)" />
+        <param name="pose_topic" value="$(arg pose)" />
+    </node>
+
+</launch>

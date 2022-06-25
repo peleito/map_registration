@@ -1,0 +1,35 @@
+# Terminal 1
+rcs
+roslaunch map_registration combined.launch
+
+# Terminal 2
+ics
+roslaunch icp_localization icp_node_os_in_os.launch
+
+# Terminal 3
+mcs
+roslaunch map_registration map_stitching.launch
+
+rosrun map_registration joint_map_stitching _prior_map:=/home/trex/map_ws/src/map_registration/data/machine_room_dense.pcd _icp_config:=/home/trex/map_ws/src/map_registration/params/icp_l515.yaml _input_config:=/home/trex/map_ws/src/map_registration/params/input_filters_l515.yaml _map_topic:=/map/combined _scan_topic:=/camera/depth/color/points _pose_topic:=/icp_node/range_sensor_pose
+
+
+# New Instructions
+# Terminal 1
+cd /media/western_1/Machine\ Room/Third\ Attempt
+rosbag play -r 0.1 -s 70 2022-06-10-11-22-12.bag
+
+# Terminal 2
+ics
+roslaunch icp_localization icp_node_os_in_os.launch
+
+# Terminal 3
+mcs
+roslaunch map_registration map_stitching.launch
+
+# Terminal 4
+mcs
+rosrun pcl_ros pointcloud_to_pcd input:=/map/combined/l515
+
+# Terminal 5
+cd ~/Libraries/libpointmatcher
+source build.sh

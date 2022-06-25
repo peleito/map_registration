@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <arg name="icp_config_name" default="upper_lower.yaml" />
+    <arg name="icp_config_path" default="$(find map_registration)/params/$(arg icp_config_name)" />
+
+    <arg name="input_filters_config_name" default="input_filters_upper_lower.yaml" />
+    <arg name="input_filters_config_path" default="$(find map_registration)/params/$(arg input_filters_config_name)" />
+
+    <arg name="pcd_filename1" default="reactor_colored.pcd" /> 
+    <arg name="pcd_filepath1" default="$(find map_registration)/data/$(arg pcd_filename1)" /> 
+
+    <arg name="pcd_filename2" default="reactor_phone_ascii.pcd" /> 
+    <arg name="pcd_filepath2" default="$(find map_registration)/data/$(arg pcd_filename2)" /> 
+
+    <node name="upper_lower_stitch" pkg="map_registration" type="upper_lower_stitch" output="screen">
+        <param name="lower" value="$(arg pcd_filepath1)" />
+        <param name="upper" value="$(arg pcd_filepath2)" />
+        <param name="icp_config" value="$(arg icp_config_path)" />
+        <param name="input_config" value="$(arg input_filters_config_path)" />
+    </node>
+
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find map_registration)/rviz/align_ul.rviz" />
+
+</launch>

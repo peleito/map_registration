@@ -1,0 +1,35 @@
+<!-- 
+  Example launch file for octomap_server mapping: 
+  Listens to incoming PointCloud2 data and incrementally builds an octomap. 
+  The data is sent out in different representations. 
+
+  Copy this file into your workspace and adjust as needed, see
+  www.ros.org/wiki/octomap_server for details  
+-->
+<launch>
+<group ns="octo1">
+	<node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+		<param name="resolution" value="0.05" />
+		
+		<!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
+		<param name="frame_id" type="string" value="map" />
+		
+		<!-- maximum range to integrate (speedup!) -->
+		<param name="sensor_model/max_range" value="30.0" />
+
+		<param name="pointcloud_min_z" value="5.0" />
+		<param name="pointcloud_max_z" value="9.0" />
+
+		<remap from="projected_map" to="octo_projected_map" />
+
+		
+		<!-- data source to integrate (PointCloud2) -->
+		<!-- <remap from="cloud_in" to="/os_cloud_node/points/filter" /> -->
+		<remap from="cloud_in" to="/cloud_pcd" />
+	
+	</node>
+</group>
+</launch>
+
+<!-- roslaunch map_registration octomap_mapping1.launch -->
+<!-- rosrun map_server map_saver -f grid1 map:=/octo1/octo_projected_map -->

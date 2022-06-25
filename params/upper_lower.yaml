@@ -1,0 +1,292 @@
+#reference filters get applied to the map and to the icp
+referenceDataPointsFilters:
+  - RemoveNaNDataPointsFilter # Remove points having NaN as coordinate.
+  
+  - SurfaceNormalDataPointsFilter: # This filter extracts the surface normal vector and other statistics to each point by taking the eigenvector corresponding to the smallest eigenvalue of its nearest neighbors.
+      # Required descriptors: none.
+      # Produced descritors:  normals(optional), densities(optional), eigValues(optional), eigVectors(optional), matchedIds (optional), meanDists(optional).
+      # Altered descriptors:  none.
+      # Altered features:     none.
+      knn: 5 # (default: 5) - number of nearest neighbors to consider, including the point itself - min: 3 - max: 2147483647
+      maxDist: inf # (default: inf) - maximum distance to consider for neighbors - min: 0 - max: inf
+      epsilon: 0 # (default: 0) - approximation to use for the nearest-neighbor search - min: 0 - max: inf
+      keepNormals: 1 # (default: 1) - whether the normals should be added as descriptors to the resulting cloud
+      keepDensities: 0 # (default: 0) - whether the point densities should be added as descriptors to the resulting cloud
+      keepEigenValues: 0 # (default: 0) - whether the eigen values should be added as descriptors to the resulting cloud
+      keepEigenVectors: 0 # (default: 0) - whether the eigen vectors should be added as descriptors to the resulting cloud
+      keepMatchedIds: 0 # (default: 0) - whether the identifiers of matches points should be added as descriptors to the resulting cloud
+      keepMeanDist: 0 # (default: 0) - whether the distance to the nearest neighbor mean should be added as descriptors to the resulting cloud
+      sortEigen: 0 # (default: 0) - whether the eigenvalues and eigenvectors should be sorted (ascending) based on the eigenvalues
+      smoothNormals: 1 # (default: 0) - whether the normal vector should be average with the nearest neighbors
+  
+  # - ObservationDirectionDataPointsFilter: # This filter extracts observation directions (vector from point to sensor), considering a sensor at position (x,y,z).
+  #     # Required descriptors: none.
+  #     # Produced descritors:  observationDirections.
+  #     # Altered descriptors:  none.
+  #     # Altered features:     none.
+  #     x: 0 # (default: 0) - x-coordinate of sensor
+  #     y: 0 # (default: 0) - y-coordinate of sensor
+  #     z: 0 # (default: 0) - z-coordinate of sensor
+  
+  # - OrientNormalsDataPointsFilter: # Normals. Reorient normals so that they all point in the same direction, with respect to the observation points.
+  #     towardCenter: 1 # (default: 1) - If set to true(1), all the normals will point inside the surface (i.e. toward the observation points). - min: 0 - max: 1
+  
+  # - ShadowDataPointsFilter: # Remove ghost points appearing on edge discontinuties. Assume that the origine of the point cloud is close to where the laser center was. Requires surface normal for every points
+  #     eps: 0.1 # (default: 0.1) - Small angle (in rad) around which a normal shoudn't be observable - min: 0.0 - max: 3.1416
+  
+  # - ElipsoidsDataPointsFilter: # Subsampling, Surfels (Elipsoids). This filter decomposes the point-cloud space in boxes, by recursively splitting the cloud through axis-aligned hyperplanes such as to maximize the evenness of the aspect ratio of the box. When the number of points in a box reaches a value knn or lower, the filter computes the center of mass of these points and its normal by taking the eigenvector corresponding to the smallest eigenvalue of all points in the box.
+  #     ratio: 0.5 # (default: 0.5) - ratio of points to keep with random subsampling. Matrix (normal, density, etc.) will be associated to all points in the same bin. - min: 0.0000001 - max: 0.9999999
+  #     knn: 7 # (default: 7) - determined how many points are used to compute the normals. Direct link with the rapidity of the computation (large = fast). Technically, limit over which a box is splitted in two - min: 3 - max: 2147483647
+  #     samplingMethod: 0 # (default: 0) - if set to 0, random subsampling using the parameter ratio. If set to 1, bin subsampling with the resulting number of points being 1/knn. - min: 0 - max: 1
+  #     maxBoxDim: inf # (default: inf) - maximum length of a box above which the box is discarded
+  #     averageExistingDescriptors: 1 # (default: 1) - whether the filter keep the existing point descriptors and average them or should it drop them
+  #     maxTimeWindow: inf # (default: inf) - maximum spread of times in a surfel
+  #     minPlanarity: 0 # (default: 0) - to what extend planarity of surfels needs to be enforced
+  #     keepNormals: 1 # (default: 1) - whether the normals should be added as descriptors to the resulting cloud
+  #     keepDensities: 1 # (default: 0) - whether the point densities should be added as descriptors to the resulting cloud
+  #     keepEigenValues: 1 # (default: 0) - whether the eigen values should be added as descriptors to the resulting cloud
+  #     keepEigenVectors: 1 # (default: 0) - whether the eigen vectors should be added as descriptors to the resulting cloud
+  #     keepMeans: 1 # (default: 0) - whether the means should be added as descriptors to the resulting cloud
+  #     keepCovariances: 1 # (default: 0) - whether the covariances should be added as descriptors to the resulting cloud
+  #     keepWeights: 1 # (default: 0) - whether the original number of points should be added as descriptors to the resulting cloud
+  #     keepShapes: 1 # (default: 0) - whether the shape parameters of cylindricity (C), sphericality (S) and planarity (P) shall be calculated
+  #     keepIndices: 1 # (default: 0) - whether the indices of points an ellipsoid is constructed of shall be kept
+  
+  # - GestaltDataPointsFilter: # Gestalt descriptors filter.
+  #     ratio: 0.1 # (default: 0.1) - ratio of points to keep with random subsampling. Matrix (normal, density, etc.) will be associated to all points in the same bin. - min: 0.0000001 - max: 0.9999999
+  #     radius: 5 # (default: 5) - is the radius of the gestalt descriptor, will be divided into 4 circular and 8 radial bins = 32 bins - min: 0.1 - max: 2147483647
+  #     knn: 7 # (default: 7) - determined how many points are used to compute the normals. Direct link with the rapidity of the computation (large = fast). Technically, limit over which a box is splitted in two - min: 3 - max: 2147483647
+  #     vSizeX: 1.0 # (default: 1.0) - Dimension of each voxel cell in x direction - min: -inf - max: inf
+  #     vSizeY: 1.0 # (default: 1.0) - Dimension of each voxel cell in y direction - min: -inf - max: inf
+  #     vSizeZ: 1.0 # (default: 1.0) - Dimension of each voxel cell in z direction - min: -inf - max: inf
+  #     keepMeans: 0 # (default: 0) - whether the means should be added as descriptors to the resulting cloud
+  #     maxBoxDim: inf # (default: inf) - maximum length of a box above which the box is discarded
+  #     averageExistingDescriptors: 1 # (default: 1) - whether the filter keep the existing point descriptors and average them or should it drop them
+  #     maxTimeWindow: inf # (default: inf) - maximum spread of times in a surfel
+  #     keepNormals: 1 # (default: 1) - whether the normals should be added as descriptors to the resulting cloud
+  #     keepEigenValues: 1 # (default: 0) - whether the eigen values should be added as descriptors to the resulting cloud
+  #     keepEigenVectors: 1 # (default: 0) - whether the eigen vectors should be added as descriptors to the resulting cloud
+  #     keepCovariances: 1 # (default: 0) - whether the covariances should be added as descriptors to the resulting cloud
+  #     keepGestaltFeatures: 1 # (default: 1) - whether the Gestalt features shall be added to the resulting cloud
+  
+  # - IncidenceAngleDataPointsFilter # Compute the incidence angle using the dot product of the viewing direction and the surface normal.
+  #     # Required descriptors: normals, observationDirections.
+  #     # Produced descritors:  incidenceAngles.
+  #     # Altered descriptors:  none.
+  #     # Altered features:     none.
+  
+  # - OctreeGridDataPointsFilter: # Construct an Octree grid representation of the point cloud. Constructed either by limiting the number of point in each octant or by limiting the size of the bounding box. Down-sample by taking either the first or a random point, or compute the centroid.
+  #     buildParallel: 1 # (default: 1) - If 1 (true), use threads to build the octree. - min: 0 - max: 1
+  #     maxPointByNode: 1 # (default: 1) - Number of point under which the octree stop dividing. - min: 1 - max: 4294967295
+  #     maxSizeByNode: 0 # (default: 0) - Size of the bounding box under which the octree stop dividing. - min: 0 - max: +inf
+  #     samplingMethod: 0 # (default: 0) - Method to sample the Octree: First Point (0), Random (1), Centroid (2) (more accurate but costly), Medoid (3) (more accurate but costly) - min: 0 - max: 3
+  
+  # - SaliencyDataPointsFilter: # Point cloud enhancement: compute geometric features saliencies throught Tensor Voting framework.
+  #     k: 50 # (default: 50) - Number of neighbors to consider - min: 6 - max: 4294967295
+  #     sigma: 0.2 # (default: 0.2) - Scale of the vote. - min: 0. - max: +inf
+  #     keepNormals: 1 # (default: 1) - Flag to keep normals computed by TV. - min: 0 - max: 1
+  #     keepLabels: 1 # (default: 1) - Flag to keep labels computed by TV. - min: 0 - max: 1
+  #     keepTensors: 1 # (default: 1) - Flag to keep elements Tensors computed by TV. - min: 0 - max: 1
+  
+  # - SamplingSurfaceNormalDataPointsFilter: # Subsampling, Normals. This filter decomposes the point-cloud space in boxes, by recursively splitting the cloud through axis-aligned hyperplanes such as to maximize the evenness of the aspect ratio of the box. When the number of points in a box reaches a value knn or lower, the filter computes the center of mass of these points and its normal by taking the eigenvector corresponding to the smallest eigenvalue of all points in the box.
+  #     ratio: 0.5 # (default: 0.5) - ratio of points to keep with random subsampling. Matrix (normal, density, etc.) will be associated to all points in the same bin. - min: 0.0000001 - max: 1.0
+  #     knn: 5 # (default: 7) - determined how many points are used to compute the normals. Direct link with the rapidity of the computation (large = fast). Technically, limit over which a box is splitted in two - min: 3 - max: 2147483647
+  #     samplingMethod: 0 # (default: 0) - if set to 0, random subsampling using the parameter ratio. If set to 1, bin subsampling with the resulting number of points being 1/knn. - min: 0 - max: 1
+  #     maxBoxDim: 0 # (default: inf) - maximum length of a box above which the box is discarded
+  #     averageExistingDescriptors: 1 # (default: 1) - whether the filter keep the existing point descriptors and average them or should it drop them
+  #     keepNormals: 1 # (default: 1) - whether the normals should be added as descriptors to the resulting cloud
+  #     keepDensities: 1 # (default: 0) - whether the point densities should be added as descriptors to the resulting cloud
+  #     keepEigenValues: 0 # (default: 0) - whether the eigen values should be added as descriptors to the resulting cloud
+  #     keepEigenVectors: 0 # (default: 0) - whether the eigen vectors should be added as descriptors to the resulting cloud
+  
+  # - SpectralDecompositionDataPointsFilter: # Point cloud sampling and enhancement: compute geometric features saliencies throught Tensor Voting framework and use them to sample the point cloud. [5]
+  #     k: 50 # (default: 50) - Number of neighbors to consider - min: 6 - max: 4294967295
+  #     sigma: 0.2 # (default: 0.2) - Scale of the vote in TensorVoting. - min: 0. - max: +inf
+  #     radius: 0.4 # (default: 0.4) - Radius to control the scale of the uniform distribution. - min: 0. - max: +inf
+  #     itMax: 10 # (default: 10) - Number max of iterations to do - min: 1 - max: 4294967295
+  #     keepNormals: 1 # (default: 1) - Flag to keep normals computed by TV. - min: 0 - max: 1
+  #     keepLabels: 1 # (default: 1) - Flag to keep labels computed by TV. - min: 0 - max: 1
+  #     keepLambdas: 1 # (default: 1) - Flag to keep lambdas computed by TV. - min: 0 - max: 1
+  #     keepTensors: 1 # (default: 1) - Flag to keep elements Tensors computed by TV. - min: 0 - max: 1
+  
+  # - SphericalityDataPointsFilter: # This filter computes the level of ’sphericality’ for each point. It describes the shape of local geometry, whether the surrounding points resemble a plane (the sphericality value goes towards -1) or a uniform distribution (the value towards +1). It is intended for 3D point clouds only. Sphericality is computed by subtracting the intermediate values of ‘unstructureness’ and ‘structureness’.
+  #     # Required descriptors: eigValues (must be three, otherwise exception).
+  #     # Produced descritors:  sphericality, unstructureness(optional), structureness(optional).
+  #     # Altered descriptors:  none.
+  #     # Altered features:     none.
+  #     keepUnstructureness: 1 # (default: 0) - whether the value of the unstructureness should be added to the pointcloud
+  #     keepStructureness: 1 # (default: 0) - whether the value of the structureness should be added to the pointcloud
+  
+  # - VoxelGridDataPointsFilter: # Construct Voxel grid of the point cloud. Down-sample by taking centroid or center of grid cells.
+  #     vSizeX: 1.0 # (default: 1.0) - Dimension of each voxel cell in x direction - min: 0.001 - max: +inf
+  #     vSizeY: 1.0 # (default: 1.0) - Dimension of each voxel cell in y direction - min: 0.001 - max: +inf
+  #     vSizeZ: 1.0 # (default: 1.0) - Dimension of each voxel cell in z direction - min: 0.001 - max: +inf
+  #     useCentroid: 1 # (default: 1) - If 1 (true), down-sample by using centroid of voxel cell.  If false (0), use center of voxel cell. - min: 0 - max: 1
+  #     averageExistingDescriptors: 1 # (default: 1) - whether the filter keep the existing point descriptors and average them or should it drop them - min: 0 - max: 1
+  
+  # - RandomSamplingDataPointsFilter: # Subsampling. This filter reduces the size of the point cloud by randomly dropping points. Based on [2]
+  #     prob: 0.25 # (default: 0.75) - Probability to keep a point, one over decimation factor  - min: 0 - max: 1
+  #     randomSamplingMethod: 0 # (default: 0) - Random sampling method: Direct RNG (0) (fastest), Uniform (1) (more accurate but slower) - min: 0 - max: 1
+  
+  # - BoundingBoxDataPointsFilter: # Subsampling. Remove points laying in a bounding box which is axis aligned.
+  #     xMin: -1 # (default: -1) - minimum value on x-axis defining one side of the bounding box - min: -inf - max: inf
+  #     xMax: 1 # (default: 1) - maximum value on x-axis defining one side of the bounding box - min: -inf - max: inf
+  #     yMin: -1 # (default: -1) - minimum value on y-axis defining one side of the bounding box - min: -inf - max: inf
+  #     yMax: 1 # (default: 1) - maximum value on y-axis defining one side of the bounding box - min: -inf - max: inf
+  #     zMin: -1 # (default: -1) - minimum value on z-axis defining one side of the bounding box - min: -inf - max: inf
+  #     zMax: 1 # (default: 1) - maximum value on z-axis defining one side of the bounding box - min: -inf - max: inf
+  #     removeInside: 1 # (default: 1) - If set to true (1), remove points inside the bounding box; else (0), remove points outside the bounding box - min: 0 - max: 1
+  # - CovarianceSamplingDataPointsFilter: # Covariance Sampling (CovS) [1]. Performs stability analysis to select geometrically stable points that can bind the rotational components as well as the translational. Uses an estimate of the covariance matrix to detect pair of points which will not be constrained.
+  #     nbSample: 5000 # (default: 5000) - Number of point to select. - min: 1 - max: 4294967295
+  #     torqueNorm: 1 # (default: 1) - Method for torque normalization: (0) L=1 (no normalization, more t-normals), (1) L=Lavg (average distance, torque is scale-independent), (2) L=Lmax (scale in unit ball, more r-normals) - min: 0 - max: 2
+  # - CutAtDescriptorThresholdDataPointsFilter: # Subsampling. Cut points with value of a given descriptor above or below a given threshold.
+  #     descName: none # (default: none) - Descriptor name used to cut points
+  #     useLargerThan: 1 # (default: 1) - If set to 1 (true), points with values above the 'threshold' will be cut.  If set to 0 (false), points with values below the 'threshold' will be cut. - min: 0 - max: 1
+  #     threshold: 0 # (default: 0) - Value at which to cut. - min: -inf - max: inf
+  # - DistanceLimitDataPointsFilter: # Subsampling. Filter points based on distance measured on a specific axis. If dim is set to -1, points are filtered based on radial distance.
+  #     dim: -1 # (default: -1) - dimension on which the filter will be applied. x=0, y=1, z=2, radius=-1 - min: -1 - max: 2
+  #     dist: 1 # (default: 1) - distance limit of the filter. If dim is set to -1 (radius), the absolute value of dist will be used - min: -inf - max: inf
+  #     removeInside: 1 # (default: 1) - If set to true (1), remove points before the distance limit; else (0), remove points beyond the distance limit - min: 0 - max: 1
+  # - SimpleSensorNoiseDataPointsFilter: # Add a 1D descriptor named <sensorNoise> that would represent the noise radius expressed in meter based on SICK LMS specifications [4].
+  #     sensorType: 0 # (default: 0) - Type of the sensor used. Choices: 0=Sick LMS-1xx, 1=Hokuyo URG-04LX, 2=Hokuyo UTM-30LX, 3=Kinect/Xtion - min: 0 - max: 2147483647
+  #     gain: 1 # (default: 1) - If the point cloud is coming from an untrusty source, you can use the gain to augment the uncertainty - min: 1 - max: inf
+  # - RemoveSensorBiasDataPointsFilter: # Remove the bias induced by the angle of incidence
+  #     # Required descriptors: incidenceAngles, observationDirections.
+  #     # Produced descritors:  none.
+  #     # Altered descriptors:  none.
+  #     # Altered features:     points coordinates and number of points.
+  #     sensorType: 0 # (default: 0) - Type of the sensor used. Choices: 0=Sick LMS-1xx, 1=Velodyne HDL-32E - min: 0 - max: 1
+  #     angleThreshold: 88.0 # (default: 88.) - Threshold at which angle the correction is not applied, in degrees - min: 0. - max: 90.
+  # - MaxDensityDataPointsFilter: # Subsampling. Reduce the points number by randomly removing points with a density highler than a treshold.
+  #     maxDensity: 10 # (default: 10) - Maximum density of points to target. Unit: number of points per m^3. - min: 0.0000001 - max: inf
+  # - MaxDistDataPointsFilter: # Subsampling. Filter points beyond a maximum distance measured on a specific axis. If dim is set to -1, points are filtered based on a maximum radius.
+  #     dim: -1 # (default: -1) - dimension on which the filter will be applied. x=0, y=1, z=2, radius=-1 - min: -1 - max: 2
+  #     maxDist: 1 # (default: 1) - maximum distance authorized. If dim is set to -1 (radius), the absolute value of minDist will be used. All points beyond that will be filtered. - min: -inf - max: inf
+  # - MaxPointCountDataPointsFilter: # Conditional subsampling. This filter reduces the size of the point cloud by randomly dropping points if their number is above maxCount. Based on [2]
+  #     seed: 1 # (default: 1) - srand seed - min: 0 - max: 2147483647
+  #     maxCount: 1000 # (default: 1000) - maximum number of points - min: 0 - max: 2147483647
+  # - MaxQuantileOnAxisDataPointsFilter: # Subsampling. Filter points under or beyond a maximum quantile measured on a specific axis.
+  #     dim: 0 # (default: 0) - dimension on which the filter will be applied. x=0, y=1, z=2 - min: 0 - max: 2
+  #     ratio: 0.5 # (default: 0.5) - maximum quantile authorized. All points beyond that will be filtered. - min: 0.0000001 - max: 0.9999999
+  #     removeBeyond: 1 # (default: 1) - If set to true (1), remove points beyond the quantile ratio; else (0), remove points under the quantile ratio - min: 0 - max: 1
+  # - MinDistDataPointsFilter: # Subsampling. Filter points before a minimum distance measured on a specific axis. If dim is set to -1, points are filtered based on a minimum radius.
+  #     dim: -1 # (default: -1) - dimension on which the filter will be applied. x=0, y=1, z=2, radius=-1 - min: -1 - max: 2
+  #     minDist: 1 # (default: 1) - minimum value authorized. If dim is set to -1 (radius), the absolute value of minDist will be used. All points before that will be filtered. - min: -inf - max: inf
+  # - NormalSpaceDataPointsFilter: # Normal Space Sampling (NSS) [3]. Construct a set of buckets in the normal-space, then put all points of the data into buckets based on their normal direction; Finally, uniformly pick points from all the buckets until the desired number of points is selected. **Required** to compute normals as pre-step.
+  #     nbSample: 5000 # (default: 5000) - Number of point to select. - min: 1 - max: 4294967295
+  #     seed: 1 # (default: 1) - Seed for the random generator. - min: 0 - max: 4294967295
+  #     epsilon: 0.09817477042 # (default: 0.09817477042) - Step of discretization for the angle spaces - min: 0.04908738521 - max: 3.14159265359
+  # - IdentityDataPointsFilter # Does nothing.
+  # - FOVDataPointsFilter: # Subsampling. Remove points outside of a given field of view.
+  #     x: 0 # (default: 0) - x position of the camera wrt the origin - min: -inf - max: inf
+  #     y: 0 # (default: 0) - y position of the camera wrt the origin - min: -inf - max: inf
+  #     z: 0 # (default: 0) - z position of the camera wrt the origin - min: -inf - max: inf
+  #     qx: 0 # (default: 0) - qx rotation of the camera wrt the origin - min: -inf - max: inf
+  #     qy: 0 # (default: 0) - qy rotation of the camera wrt the origin - min: -inf - max: inf
+  #     qz: 0 # (default: 0) - qz rotation of the camera wrt the origin - min: -inf - max: inf
+  #     qw: 1 # (default: 1) - qw rotation of the camera wrt the origin - min: -inf - max: inf
+  #     distance: 1 # (default: 1) - distance along the principle axis of the camera - min: 0 - max: inf
+  #     horizontal: 1 # (default: 1) - horizontal angle of view of the camera - min: 0 - max: 6.28
+  #     vertical: 1 # (default: 1) - vertical angle of view of the camera - min: 0 - max: 6.28
+  #     removeInside: 0 # (default: 0) - If set to true (1), remove points inside the field of view; else (0), remove points outside the field of view - min: 0 - max: 1
+  # - FixStepSamplingDataPointsFilter: # Subsampling. This filter reduces the size of the point cloud by only keeping one point over step ones; with step varying in time from startStep to endStep, each iteration getting multiplied by stepMult. If use as prefilter (i.e. before the iterations), only startStep is used.
+  #     startStep: 10 # (default: 10) - initial number of point to skip (initial decimation factor) - min: 1 - max: 2147483647
+  #     endStep: 10 # (default: 10) - maximal or minimal number of points to skip (final decimation factor) - min: 1 - max: 2147483647
+  #     stepMult: 1 # (default: 1) - multiplication factor to compute the new decimation factor for each iteration - min: 0.0000001 - max: inf
+    
+
+matcher:
+  KDTreeMatcher: # This matcher matches a point from the reading to its closest neighbors in the reference.
+    knn: 1 # (default: 1) - number of nearest neighbors to consider it the reference - min: 1 - max: 2147483647
+    epsilon: 0.1 # (default: 0) - approximation to use for the nearest-neighbor search - min: 0 - max: inf
+    searchType: 1 # (default: 1) - Nabo search type. 0: brute force, check distance to every point in the data (very slow), 1: kd-tree with linear heap, good for small knn (~up to 30) and 2: kd-tree with tree heap, good for large knn (~from 30) - min: 0 - max: 2
+    maxDist: inf # (default: inf) - maximum distance to consider for neighbors - min: 0 - max: inf
+  # KDTreeVarDistMatcher: # This matcher matches a point from the reading to its closest neighbors in the reference. A maximum search radius per point can be defined.
+  #   knn: 1 # (default: 1) - number of nearest neighbors to consider it the reference - min: 1 - max: 2147483647
+  #   epsilon: 0 # (default: 0) - approximation to use for the nearest-neighbor search - min: 0 - max: inf
+  #   searchType: 1 # (default: 1) - Nabo search type. 0: brute force, check distance to every point in the data (very slow), 1: kd-tree with linear heap, good for small knn (~up to 30) and 2: kd-tree with tree heap, good for large knn (~from 30) - min: 0 - max: 2
+  #   maxDistField: maxSearchDist # (default: maxSearchDist) - descriptor field name used to set a maximum distance to consider for neighbors per point
+  # NullMatcher # Does nothing, returns no match.
+
+outlierFilters:
+  # - TrimmedDistOutlierFilter: # Hard rejection threshold using quantile. This filter considers as inlier a certain percentage of the links with the smallest norms. Based on [7].
+  #     ratio: 0.7 # (default: 0.85) - percentage to keep - min: 0.0000001 - max: 1.0
+  # - SurfaceNormalOutlierFilter: # Hard rejection threshold using the angle between the surface normal vector of the reading and the reference. Usually used in combination with `OrientNormalDataPointsFilter`. If normal vectors are not in the descriptor for both of the point clouds, does nothing.
+  #     maxAngle: 1.57 # (default: 1.57) - Maximum authorised angle between the 2 surface normals (in radian) - min: 0.0 - max: 3.1416
+  # - GenericDescriptorOutlierFilter: # This filter weights matched points based on a 1D descriptor of either a single point cloud (either the reference or the reading). The descriptor values must be larger than zero.
+  #     source: reference # (default: reference) - Point cloud from which the descriptor will be used: reference or reading
+  #     descName: none # (default: none) - Descriptor name used to weight paired points
+  #     useSoftThreshold: 0 # (default: 0) - If set to 1 (true), uses the value of the descriptor as a weight. If set to 0 (false), uses the parameter 'threshold' to set binary weights. - min: 0 - max: 1
+  #     useLargerThan: 1 # (default: 1) - If set to 1 (true), values over the 'threshold' will have a weight of one.  If set to 0 (false), values under the 'threshold' will have a weight of one. All other values will have a weight of zero. - min: 0 - max: 1
+  #     threshold: 0.1 # (default: 0.1) - Value used to determine the binary weights - min: 0.0000001 - max: inf
+  # - MaxDistOutlierFilter: # This filter considers as outlier links whose norms are above a fix threshold.
+  #     maxDist: 1 # (default: 1) - threshold distance (Euclidean norm) - min: 0.0000001 - max: inf
+  # - MedianDistOutlierFilter: # This filter considers as outlier links whose norms are above the median link norms times a factor. Based on [6].
+  #     factor: 3 # (default: 3) - points farther away factor * median will be considered outliers. - min: 0.0000001 - max: inf
+  # - MinDistOutlierFilter: # This filter considers as outlier links whose norms are below a threshold.
+  #     minDist: 1 # (default: 1) - threshold distance (Euclidean norm) - min: 0.0000001 - max: inf
+  - NullOutlierFilter # Does nothing.
+  # - RobustOutlierFilter: # Robust weight function. 8 robust functions to choose from (Cauchy, Welsch, Switchable Constraint, Geman-McClure, Tukey, Huber, L1 and Student). All the functions are M-Estimator (\cite{RobustWeightFunctions}) except L1 and Student.
+  #     robustFct: cauchy # (default: cauchy) - Type of robust function used. Available fct: 'cauchy', 'welsch', 'sc'(aka Switchable-Constraint), 'gm' (aka Geman-McClure), 'tukey', 'huber' and 'L1'. (Default: cauchy)
+  #     tuning: 1.0 # (default: 1.0) - Tuning parameter used to limit the influence of outliers.If the 'scaleEstimator' is 'mad' or 'none', this parameter acts as the tuning parameter.If the 'scaleEstimator' is 'berg' this parameter acts as the target scale (σ*). - min: 0.0000001 - max: inf
+  #     scaleEstimator: mad # (default: mad) - The scale estimator is used to convert the error distance into a Mahalanobis distance. 3 estimators are available: 'none': no estimator (scale = 1), 'mad': use the median of absolute deviation (a kind of robust standard deviation), 'berg': an iterative exponentially decreasing estimator
+  #     nbIterationForScale: 0 # (default: 0) - For how many iteration the 'scaleEstimator' is recalculated. After 'nbIterationForScale' iteration the previous scale is kept. A nbIterationForScale==0 means that the estiamtor is recalculated at each iteration. - min: 0 - max: 100
+  #     distanceType: point2point # (default: point2point) - Type of error distance used, either point to point ('point2point') or point to plane('point2plane'). Point to point gives better result normally.
+  #     approximation: inf # (default: inf) - If the matched distance is larger than this threshold, its weight will be forced to zero. This can save computation as zero values are not minimized. If set to inf (default value), no approximation is done. The unit of this parameter is the same as the distance used, typically meters. - min: 0.0 - max: inf
+  # - VarTrimmedDistOutlierFilter: # Hard rejection threshold using quantile and variable ratio. Based on [8].
+  #     minRatio: 0.05 # (default: 0.05) - min ratio - min: 0.0000001 - max: 1
+  #     maxRatio: 0.99 # (default: 0.99) - max ratio - min: 0.0000001 - max: 1
+  #     lambda: 2.35 # (default: 2.35) - lambda (part of the term that balance the rmsd: 1/ratio^lambda
+
+errorMinimizer:
+  # IdentityErrorMinimizer # Does nothing.
+  PointToPlaneErrorMinimizer: # Point-to-plane error (or point-to-line in 2D). Per [9].
+    force2D: 0 # (default: 0) - If set to true(1), the minimization will be forced to give a solution in 2D (i.e., on the XY-plane) even with 3D inputs. - min: 0 - max: 1
+    force4DOF: 0 # (default: 0) - If set to true(1), the minimization will optimize only yaw and translation, pitch and roll will follow the prior. - min: 0 - max: 1
+  # PointToPlaneWithCovErrorMinimizer: # Point-to-plane error (or point-to-line in 2D). Based on [9]. Covariance estimation based on [10]. Implementation based on [11].
+  #   force2D: 0 # (default: 0) - If set to true(1), the minimization will be force to give a solution in 2D (i.e., on the XY-plane) even with 3D inputs. - min: 0 - max: 1
+  #   force4DOF: 0 # (default: 0) - If set to true(1), the minimization will optimize only yaw and translation, pitch and roll will follow the prior. - min: 0 - max: 1
+  #   sensorStdDev: 0.1 # (default: 0.01) - sensor standard deviation - min: 0. - max: inf
+  # PointToPointErrorMinimizer # Point-to-point error. Based on SVD decomposition. Per [12].
+  # PointToPointSimilarityErrorMinimizer # Point-to-point similarity error (rotation + translation + scale). The scale is the same for all coordinates. Based on SVD decomposition. Per [13].
+  # PointToPointWithCovErrorMinimizer: # Point-to-point error. Based on SVD decomposition. Based on [12]. Covariance estimation based on [10].
+  #   sensorStdDev: 0.01 # (default: 0.01) - sensor standard deviation - min: 0. - max: inf
+
+transformationCheckers:
+  - DifferentialTransformationChecker: # This checker stops the ICP loop when the relative motions (i.e. abs(currentIter - lastIter)) of rotation and translation components are below a fix thresholds. This allows to stop the iteration when the point cloud is stabilized. Smoothing can be applied to avoid oscillations. Inspired by [7].
+      minDiffRotErr: 0.01 # (default: 0.001) - threshold for rotation error (radian) - min: 0. - max: 6.2831854
+      minDiffTransErr: 0.001 # (default: 0.001) - threshold for translation error - min: 0. - max: inf
+      smoothLength: 3 # (default: 3) - number of iterations over which to average the differencial error - min: 0 - max: 2147483647
+  - CounterTransformationChecker: # This checker stops the ICP loop after a certain number of iterations.
+      maxIterationCount: 40 # (default: 40) - maximum number of iterations  - min: 0 - max: 2147483647
+  # - BoundTransformationChecker: # This checker stops the ICP loop with an exception when the transformation values exceed bounds.
+  #     maxRotationNorm: 0.39 # (default: 1) - rotation bound - min: 0 - max: inf
+  #     maxTranslationNorm: 0.25 # (default: 1) - translation bound - min: 0 - max: inf)
+
+inspector:
+  # VTKFileInspector: # Dump the different steps into VTK files.
+  #   baseFileName: point-matcher-output # (default: point-matcher-output) - base file name for the VTK files
+  #   dumpPerfOnExit: 0 # (default: 0) - dump performance statistics to stderr on exit
+  #   dumpStats: 0 # (default: 0) - dump the statistics on first and last step
+  #   dumpIterationInfo: 0 # (default: 0) - dump iteration info
+  #   dumpDataLinks: 0 # (default: 0) - dump data links at each iteration
+  #   dumpReading: 0 # (default: 0) - dump the reading cloud at each iteration
+  #   dumpReference: 0 # (default: 0) - dump the reference cloud at each iteration
+  #   writeBinary: 0 # (default: 0) - write binary VTK files
+  NullInspector # Does nothing.
+  # PerformanceInspector: # Keep statistics on performance.
+  #   baseFileName:  # (default: ) - base file name for the statistics files (if empty, disabled)
+  #   dumpPerfOnExit: 0 # (default: 0) - dump performance statistics to stderr on exit
+  #   dumpStats: 0 # (default: 0) - dump the statistics on first and last step
+  # VTKFileInspector:
+  #     baseFileName : point-matcher-output
+  #     dumpDataLinks : 1
+  #     dumpReading : 1
+  #     dumpReference : 1
+
+logger:
+  # FileLogger: # Log using std::stream.
+  #   infoFileName:  # (default: ) - name of the file to output infos to, or an empty string to output infos to the standard output stream
+  #   warningFileName:  # (default: ) - name of the file to output warnings to, or an empty string to output warnings to the standard error stream
+  #   displayLocation: 0 # (default: 0) - display the location of message in source code
+  NullLogger # Does not log anything.
